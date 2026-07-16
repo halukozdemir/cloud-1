@@ -97,8 +97,6 @@ resource "aws_instance" "server" {
   credit_specification {
     cpu_credits = "standard"
   }
-
-
 }
 
 output "public_ip" {
