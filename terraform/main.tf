@@ -10,6 +10,13 @@ terraform {
 
 provider "aws" {
   region = "eu-north-1"
+
+  default_tags {
+    tags = {
+      Project   = "cloud-1"
+      ManagedBy = "terraform"
+    }
+  }
 }
 
 data "aws_ami" "ubuntu" {
@@ -23,7 +30,7 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_key_pair" "cloud1" {
   key_name   = "cloud-1"
-  public_key = file(pathexpand("~/.ssh/cloud-1.pub"))
+  public_key = file(pathexpand(var.ssh_public_key_path))
 }
 
 resource "aws_security_group" "web" {
@@ -72,6 +79,26 @@ resource "aws_instance" "server" {
   tags = {
     Name = "cloud-1"
   }
+
+  lifecycle {
+    ignore_changes = [ami]
+  }
+
+  metadata_options {
+    http_tokens = "required"
+  }
+
+  root_block_device {
+    volume_type = "gp3"
+    volume_size = 15
+    encrypted   = true
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+
 }
 
 output "public_ip" {
