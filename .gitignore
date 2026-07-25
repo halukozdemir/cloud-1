@@ -9,7 +9,8 @@ crash.log
 *.retry
 vault-password.txt
 
-# Genel
+# General
 .DS_STORE
 .env
 inception
+cloud1.pdf
