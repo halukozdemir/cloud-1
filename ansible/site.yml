@@ -1,0 +1,6 @@
+- name: Deploy Cloud-1 stack
+  hosts: web
+  become: true
+
+  roles:
+    - docker
