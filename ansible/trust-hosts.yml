@@ -1,0 +1,25 @@
+- name: Trust EC2 host keys from AWS console output
+  hosts:  web
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Fetch instance console output
+      ansible.builtin.command:
+        cmd: >-
+          aws ec2 get-console-output
+          --instance-id {{ instance_id }}
+          --region {{ placement.region }}
+          --output text --query Output
+      register: console
+      changed_when: false
+      until:  "'BEGIN SSH HOST KEY KEYS' in console.stdout"
+      retries:  20
+      delay:  15
+    
+    - name: Add verified host key to known_hosts
+      ansible.builtin.known_hosts:
+        name: "{{ inventory_hostname }}"
+        key:  "{{ inventory_hostname }} {{ item }}"
+        state: present
+      loop: "{{ console.stdout | regex_findall('(?:ssh-ed25519|ecdsa-sha2-nistp256|ssh-rsa) [A-Za-z0-9+/=]+') }}"
