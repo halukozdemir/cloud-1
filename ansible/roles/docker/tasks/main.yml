@@ -8,6 +8,7 @@
       - docker-compose-v2
     state: present
     update_cache: true
+
 - name: Start Docker service and enable it on boot
   ansible.builtin.service:
     name: docker
