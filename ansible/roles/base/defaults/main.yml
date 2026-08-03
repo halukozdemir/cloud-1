@@ -1,0 +1,5 @@
+#SPDX-License-Identifier: MIT-0
+---
+# defaults file for roles/base
+swap_file:  /swapfile
+swap_size:  2G

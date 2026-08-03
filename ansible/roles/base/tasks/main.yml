@@ -1,0 +1,33 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/base
+- name: Create swap file
+  ansible.builtin.command:
+    cmd:  fallocate -l {{ swap_size }} {{ swap_file }}
+    creates:  "{{ swap_file }}"
+  register: swap_created
+
+- name: Restrict swap file permissions
+  ansible.builtin.file:
+    path: "{{ swap_file }}"
+    owner:  root
+    group:  root
+    mode: '0600'
+
+- name: Format swap file
+  ansible.builtin.command:
+    cmd:  mkswap {{ swap_file }}
+  when: swap_created.changed
+
+- name: Enable swap file
+  ansible.builtin.command:
+    cmd:  swapon {{ swap_file }}
+  when: ansible_facts.swaptotal_mb | int == 0
+
+- name: Persist swap in fstab
+  ansible.posix.mount:
+    path: none
+    src:  "{{ swap_file }}"
+    fstype: swap
+    opts: sw
+    state:  present
