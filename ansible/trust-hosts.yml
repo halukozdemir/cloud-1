@@ -10,13 +10,14 @@
           aws ec2 get-console-output
           --instance-id {{ instance_id }}
           --region {{ placement.region }}
+          --latest
           --output text --query Output
       register: console
       changed_when: false
       until:  "'BEGIN SSH HOST KEY KEYS' in console.stdout"
       retries:  20
       delay:  15
-    
+
     - name: Add verified host key to known_hosts
       ansible.builtin.known_hosts:
         name: "{{ inventory_hostname }}"

@@ -71,17 +71,18 @@ Savunmada "şu şartı nasıl sağladın?" sorusuna hazır cevap tablosu.
 
 ---
 
-## Faz 4 — Boru hattını pürüzsüzleştir (kısa ama kritik)
+## ✅ Faz 4 — Boru hattını pürüzsüzleştir (kısa ama kritik)
 
 Uygulamaya geçmeden önce günlük iş akışındaki sürtünmeleri kaldırıyoruz.
 Bunlar olmadan her `destroy`/`apply` sonrası elle iş yapmak gerekiyor.
 
-- [ ] **Dinamik envanter** — `terraform output -raw public_ip` çıktısından envanteri üret.
+- [x] **Dinamik envanter** — `terraform output -raw public_ip` çıktısından envanteri üret.
       IP artık hiçbir yere elle yazılmayacak (şu an `inventory.yml`'de sabit duruyor).
-- [ ] **`ansible.cfg`** — `-i inventory.yml` yazmaktan kurtul; host key checking, forks ayarı
-- [ ] **Swap dosyası** — t3.micro'da 1 GB RAM var, Docker build/pull sırasında yetmez.
+- [x] **`ansible.cfg`** — `-i inventory.yml` yazmaktan kurtul; host key checking, forks ayarı
+- [x] **Swap dosyası** — t3.micro'da 1 GB RAM var, Docker build/pull sırasında yetmez.
       2 GB swap Ansible görevi olarak (`creates:` guard'ıyla idempotent)
       (DuckDNS alan adı Faz 5'in TLS adımına ertelendi — self-signed IP ile çalışıyor)
+- [x] **Idempotency doğrulaması** — ikinci `site.yml` koşusunda `changed=0`.
 
 ## Faz 5 — Uygulama yığını
 
